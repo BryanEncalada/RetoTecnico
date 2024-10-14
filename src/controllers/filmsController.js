@@ -21,15 +21,18 @@ const films = require("../models/films");
  *         description: Error al obtener los datos
  */
 const getFilmsData = async (req, res) => {
-  // Cambia 'res' por 'req'
   try {
+
+    //trae datos de la API
     const response = await axios.get("https://swapi.py4e.com/api/films/");
     const filmsFromAPI = response.data.results.map(
       (data) => new FilmSchema(data)
     );
 
+      console.log("Fetching films from DB...");
+    //trae datos de la base de datos
     const filmsFromDB = await films.findAll();
-    console.log("prueba03");
+    console.log(filmsFromDB);
 
     const combinedFilms = [
       ...filmsFromAPI,

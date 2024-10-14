@@ -1,141 +1,137 @@
-const axios = require("axios");
-const Films = require("../../src/models/films");
-const FilmSchema = require("../../src/models/FilmSchema");
-const { getFilmsData, addFilmData } = require("../../src/controllers/filmsController");
+const { getFilmsData, addFilmData } = require('../../src/controllers/filmsController');
+const axios = require('axios');
+const films = require('../../src/models/films');
+const FilmSchema = require('../../src/models/FilmSchema');
 
-jest.mock("axios");
-jest.mock("../../src/models/films");
-jest.mock("../../src/models/FilmSchema");
+jest.mock('axios');
+jest.mock('../../src/models/films');
 
-describe("getFilmsData", () => {
-    let req, res;
 
-    beforeEach(() => {
-        req = {};
-        res = {
-            json: jest.fn(),
-            status: jest.fn().mockReturnThis(),
-            send: jest.fn(),
-        };
+
+describe('filmsController', () => {
+  describe('getFilmsData', () => {
+     it("should return combined films data from API and database", async () => {
+       // Datos simulados de la API
+       const apiFilms = [
+         { title: "Film 1", episode_id: 1 },
+         { title: "Film 2", episode_id: 2 },
+       ];
+
+       // Datos simulados de la base de datos
+       const dbFilms = [
+         { titulo: "Film 3", episodio_id: 3 },
+         { titulo: "Film 4", episodio_id: 4 },
+       ];
+
+       // Mock de Axios para la llamada a la API
+       axios.get.mockResolvedValue({ data: { results: apiFilms } });
+
+       // Mock para la función findAll de la base de datos
+       films.findAll.mockResolvedValue(dbFilms);
+
+       // Simulamos el objeto res con sus métodos
+       const res = {
+         statusCode: null,
+         body: null,
+         status: function (code) {
+           this.statusCode = code;
+           return this;
+         },
+         json: function (data) {
+           this.body = JSON.stringify(data);
+         },
+       };
+
+       // Ejecutamos la función con el objeto res simulado
+       const result = await getFilmsData({}, res);
+
+       // Verificamos que se haya retornado un código de estado 200
+       expect(result.statusCode).toBe(200);
+
+       // Parseamos el cuerpo de la respuesta
+       const combinedFilms = JSON.parse(result.body);
+
+       // Verificamos que la longitud de los datos combinados sea correcta
+       expect(combinedFilms.length).toBe(4);
+
+       // Verificamos que los datos de la API estén presentes en el resultado
+       expect(combinedFilms[0]).toHaveProperty("title", "Film 1");
+
+       // Verificamos que los datos de la base de datos estén presentes en el resultado
+       expect(combinedFilms[2]).toHaveProperty("titulo", "Film 3");
+     });
+
+    it('should return 500 if there is an error', async () => {
+      axios.get.mockRejectedValue(new Error('API Error'));
+
+      const result = await getFilmsData();
+
+      expect(result.statusCode).toBe(500);
+      const responseBody = JSON.parse(result.body);
+      expect(responseBody).toHaveProperty('message', 'Error al obtener los datos');
+    });
+  });
+
+  describe('addFilmData', () => {
+    it('should add a new film and return 201', async () => {
+      const newFilm = {
+        titulo: 'New Film',
+        episodio_id: 5,
+        director: 'Director',
+        productor: 'Producer',
+        fecha_lanzamiento: '2023-01-01',
+      };
+
+      films.create.mockResolvedValue(newFilm);
+
+      const event = {
+        body: JSON.stringify(newFilm),
+      };
+
+      const result = await addFilmData(event);
+
+      expect(result.statusCode).toBe(201);
+      const responseBody = JSON.parse(result.body);
+      expect(responseBody).toHaveProperty('message', 'Se agregó una nueva película');
+      expect(responseBody.data).toEqual(newFilm);
     });
 
-    it("should return combined films data from API and DB", async () => {
-        const apiFilms = [
-            { title: "Film 1", episode_id: 1 },
-            { title: "Film 2", episode_id: 2 },
-        ];
-        const dbFilms = [
-            {
-                titulo: "Film 3",
-                episodio_id: 3,
-                sinopsis: "Synopsis 3",
-                director: "Director 3",
-                productor: "Producer 3",
-                fecha_lanzamiento: "2023-01-01",
-                especies: [],
-                naves_estelares: [],
-                vehiculos: [],
-                personajes: [],
-                planetas: [],
-                url: "url3",
-                creado: "2023-01-01",
-                editado: "2023-01-01",
-            },
-        ];
+    it('should return 400 if required fields are missing', async () => {
+      const incompleteFilm = {
+        titulo: 'Incomplete Film',
+      };
 
-        axios.get.mockResolvedValue({ data: { results: apiFilms } });
-        Films.findAll.mockResolvedValue(dbFilms);
+      const event = {
+        body: JSON.stringify(incompleteFilm),
+      };
 
-        await getFilmsData(req, res);
+      const result = await addFilmData(event);
 
-        expect(axios.get).toHaveBeenCalledWith("https://swapi.py4e.com/api/films/");
-        expect(Films.findAll).toHaveBeenCalled();
-        expect(res.json).toHaveBeenCalledWith([
-            ...apiFilms.map((data) => new FilmSchema(data)),
-            ...dbFilms,
-        ]);
+      expect(result.statusCode).toBe(400);
+      const responseBody = JSON.parse(result.body);
+      expect(responseBody).toHaveProperty('message', 'Faltan campos requeridos');
     });
 
-    it("should handle errors and return 500 status", async () => {
-        axios.get.mockRejectedValue(new Error("API Error"));
+    it('should return 500 if there is an error', async () => {
+      films.create.mockRejectedValue(new Error('DB Error'));
 
-        await getFilmsData(req, res);
+      const newFilm = {
+        titulo: 'New Film',
+        episodio_id: 5,
+        director: 'Director',
+        productor: 'Producer',
+        fecha_lanzamiento: '2023-01-01',
+      };
 
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.send).toHaveBeenCalledWith("Error al obtener los datos");
+      const event = {
+        body: JSON.stringify(newFilm),
+      };
+
+      const result = await addFilmData(event);
+
+      expect(result.statusCode).toBe(500);
+      const responseBody = JSON.parse(result.body);
+      expect(responseBody).toHaveProperty('message', 'Error al agregar una nueva película');
     });
-
-
-   
+  });
 });
-
- describe("addFilmData", () => {
-   let req, res;
-
-   beforeEach(() => {
-     req = {
-       body: {
-         titulo: "Film 4",
-         episodio_id: 4,
-         sinopsis: "Synopsis 4",
-         director: "Director 4",
-         productor: "Producer 4",
-         fecha_lanzamiento: "2023-02-01",
-         especies: [],
-         naves_estelares: [],
-         vehiculos: [],
-         personajes: [],
-         planetas: [],
-         url: "url4",
-         creado: "2023-02-01",
-         editado: "2023-02-01",
-       },
-     };
-     res = {
-       json: jest.fn(),
-       status: jest.fn().mockReturnThis(),
-       send: jest.fn(),
-     };
-   });
-
-   it("should add a new film and return 201 status", async () => {
-     Films.create.mockResolvedValue(req.body);
-
-     await addFilmData(req, res);
-
-     expect(Films.create).toHaveBeenCalledWith(req.body);
-     expect(res.status).toHaveBeenCalledWith(201);
-     expect(res.json).toHaveBeenCalledWith({
-       message: "Se agregó una nueva película",
-       data: req.body,
-     });
-   });
-
-   it("should return 400 status if required fields are missing", async () => {
-     req.body = {
-       titulo: "Film 4",
-       episodio_id: 4,
-       director: "Director 4",
-       productor: "Producer 4",
-     };
-
-     await addFilmData(req, res);
-
-     expect(res.status).toHaveBeenCalledWith(400);
-     expect(res.json).toHaveBeenCalledWith({
-       message: "Faltan campos requeridos",
-     });
-   });
-
-   it("should handle errors and return 500 status", async () => {
-     Films.create.mockRejectedValue(new Error("DB Error"));
-
-     await addFilmData(req, res);
-
-     expect(res.status).toHaveBeenCalledWith(500);
-     expect(res.json).toHaveBeenCalledWith({
-       message: "Error al agregar una nueva película",
-       error: "DB Error",
-     });
-   });
- });

@@ -1,0 +1,24 @@
+
+
+-- // Crear base de datos y tabla para almacenar los datos de las películas de Star Wars
+
+CREATE DATABASE SWAPI;
+USE SWAPI;
+
+CREATE TABLE films (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(255) NOT NULL,
+    episodio_id VARCHAR(50),
+    sinopsis TEXT,
+    director VARCHAR(255),
+    productor VARCHAR(255),
+    fecha_lanzamiento DATE,
+    especies TEXT, 
+    naves_estelares TEXT, 
+    vehiculos TEXT, 
+    personajes TEXT, 
+    planetas TEXT, 
+    url VARCHAR(255),
+    creado DATETIME,
+    editado DATETIME
+);
