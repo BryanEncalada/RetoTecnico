@@ -12,64 +12,66 @@ describe("Films Model", () => {
         await sequelize.close();
     });
 
-    it("should create a film with required fields", async () => {
-        const filmData = {
-            titulo: "A New Hope",
-            episodio_id: "IV",
-            director: "George Lucas",
-            productor: "Gary Kurtz",
-            fecha_lanzamiento: new Date("1977-05-25"),
-        };
+    it("Debería crear una película con los campos requeridos", async () => {
+      const filmData = {
+        titulo: "A New Hope",
+        episodio_id: "IV",
+        director: "George Lucas",
+        productor: "Gary Kurtz",
+        fecha_lanzamiento: new Date("1977-05-25"),
+      };
 
-        const film = await Films.create(filmData);
+      const film = await Films.create(filmData);
 
-        expect(film.titulo).toBe(filmData.titulo);
-        expect(film.episodio_id).toBe(filmData.episodio_id);
-        expect(film.director).toBe(filmData.director);
-        expect(film.productor).toBe(filmData.productor);
-        expect(film.fecha_lanzamiento).toEqual(filmData.fecha_lanzamiento);
+      expect(film.titulo).toBe(filmData.titulo);
+      expect(film.episodio_id).toBe(filmData.episodio_id);
+      expect(film.director).toBe(filmData.director);
+      expect(film.productor).toBe(filmData.productor);
+      expect(film.fecha_lanzamiento).toEqual(filmData.fecha_lanzamiento);
     });
 
-    it("should not create a film without required fields", async () => {
-        const filmData = {
-            titulo: "The Empire Strikes Back",
-        };
+    it("No debería crear una película sin los campos requeridos", async () => {
+      const filmData = {
+        titulo: "The Empire Strikes Back",
+      };
 
-        await expect(Films.create(filmData)).rejects.toThrow();
+      await expect(Films.create(filmData)).rejects.toThrow();
     });
 
-    it("should create a film with optional fields", async () => {
-        const filmData = {
-            titulo: "Return of the Jedi",
-            episodio_id: "VI",
-            director: "Richard Marquand",
-            productor: "Howard G. Kazanjian",
-            fecha_lanzamiento: new Date("1983-05-25"),
-            sinopsis: "The Empire prepares to crush the Rebellion with a more powerful Death Star.",
-            especies: JSON.stringify([{ name: "Ewok" }]),
-            naves_estelares: JSON.stringify([{ name: "Millennium Falcon" }]),
-            vehiculos: JSON.stringify([{ name: "Speeder Bike" }]),
-            personajes: JSON.stringify([{ name: "Luke Skywalker" }]),
-            planetas: JSON.stringify([{ name: "Endor" }]),
-            url: "https://swapi.dev/api/films/3/",
-            creado: new Date(),
-            editado: new Date(),
-        };
+    it("Debería crear una película con los campos opcionales", async () => {
+      const filmData = {
+        titulo: "Return of the Jedi",
+        episodio_id: "VI",
+        director: "Richard Marquand",
+        productor: "Howard G. Kazanjian",
+        fecha_lanzamiento: new Date("1983-05-25"),
+        sinopsis:
+          "The Empire prepares to crush the Rebellion with a more powerful Death Star.",
+        especies: JSON.stringify([{ name: "Ewok" }]),
+        naves_estelares: JSON.stringify([{ name: "Millennium Falcon" }]),
+        vehiculos: JSON.stringify([{ name: "Speeder Bike" }]),
+        personajes: JSON.stringify([{ name: "Luke Skywalker" }]),
+        planetas: JSON.stringify([{ name: "Endor" }]),
+        url: "https://swapi.dev/api/films/3/",
+        creado: new Date(),
+        editado: new Date(),
+      };
 
-        const film = await Films.create(filmData);
+      const film = await Films.create(filmData);
 
-        expect(film.sinopsis).toBe(filmData.sinopsis);
-        expect(film.especies).toEqual(filmData.especies);
-        expect(film.naves_estelares).toEqual(filmData.naves_estelares);
-        expect(film.vehiculos).toEqual(filmData.vehiculos);
-        expect(film.personajes).toEqual(filmData.personajes);
-        expect(film.planetas).toEqual(filmData.planetas);
-        expect(film.url).toBe(filmData.url);
-        expect(film.creado).toEqual(filmData.creado);
-        expect(film.editado).toEqual(filmData.editado);
+      expect(film.sinopsis).toBe(filmData.sinopsis);
+      expect(film.especies).toEqual(filmData.especies);
+      expect(film.naves_estelares).toEqual(filmData.naves_estelares);
+      expect(film.vehiculos).toEqual(filmData.vehiculos);
+      expect(film.personajes).toEqual(filmData.personajes);
+      expect(film.planetas).toEqual(filmData.planetas);
+      expect(film.url).toBe(filmData.url);
+      expect(film.creado).toEqual(filmData.creado);
+      expect(film.editado).toEqual(filmData.editado);
     });
 
-it("should update a film's director", async () => {
+    // en modo en prueba
+it("Debería actualizar el director de una película:", async () => {
   const filmData = {
     titulo: "The Phantom Menace",
     episodio_id: "I",
@@ -88,7 +90,7 @@ it("should update a film's director", async () => {
   expect(updatedFilm.director).toBe(updatedDirector);
 });
 
-it("should delete a film", async () => {
+it("Debería eliminar una película", async () => {
   const filmData = {
     titulo: "Attack of the Clones",
     episodio_id: "II",

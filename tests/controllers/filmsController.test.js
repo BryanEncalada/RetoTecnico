@@ -10,7 +10,7 @@ jest.mock('../../src/models/films');
 
 describe('filmsController', () => {
   describe('getFilmsData', () => {
-     it("should return combined films data from API and database", async () => {
+     it("debería retornar datos combinados de películas desde la API y la base de datos", async () => {
        // Datos simulados de la API
        const apiFilms = [
          { title: "Film 1", episode_id: 1 },
@@ -61,7 +61,7 @@ describe('filmsController', () => {
        expect(combinedFilms[2]).toHaveProperty("titulo", "Film 3");
      });
 
-    it('should return 500 if there is an error', async () => {
+    it('deberia retornar error 500', async () => {
       axios.get.mockRejectedValue(new Error('API Error'));
 
       const result = await getFilmsData();
@@ -73,7 +73,7 @@ describe('filmsController', () => {
   });
 
   describe('addFilmData', () => {
-    it('should add a new film and return 201', async () => {
+    it('deberia agregar un nuevo fimls y retorna 201', async () => {
       const newFilm = {
         titulo: 'New Film',
         episodio_id: 5,
@@ -96,7 +96,7 @@ describe('filmsController', () => {
       expect(responseBody.data).toEqual(newFilm);
     });
 
-    it('should return 400 if required fields are missing', async () => {
+    it('deberia retornar 400 si falta un campos requerido', async () => {
       const incompleteFilm = {
         titulo: 'Incomplete Film',
       };
@@ -112,7 +112,7 @@ describe('filmsController', () => {
       expect(responseBody).toHaveProperty('message', 'Faltan campos requeridos');
     });
 
-    it('should return 500 if there is an error', async () => {
+    it('deberia retornar 500 si hay error', async () => {
       films.create.mockRejectedValue(new Error('DB Error'));
 
       const newFilm = {
