@@ -1,0 +1,38 @@
+service: default
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1 
+  environment:
+    DB_HOST: ${env:DB_HOST}
+    DB_USER: ${env:DB_USER}
+    DB_PASSWORD: ${env:DB_PASSWORD}
+    DB_NAME: ${env:DB_NAME}
+
+functions:
+
+  getFilms:
+    handler: src/app.getFilmsData  # Asegúrate de que apunte a la función correcta
+    events:
+      - http:
+          path: films  # Asegúrate de que la ruta esté correcta
+          method: get
+
+  addFilm:
+    handler: src/app.addFilmData
+    events:
+      - http:
+          path: films  # Asegúrate de que no haya conflictos de rutas
+          method: post
+
+
+plugins:
+  - serverless-offline # Si quieres probar localmente
+
+package:
+  exclude:
+    - node_modules/**
+    - .git/**
+    - .serverless/**
+

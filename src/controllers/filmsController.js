@@ -21,6 +21,7 @@ const films = require("../models/films");
  *         description: Error al obtener los datos
  */
 const getFilmsData = async (req, res) => {
+  // Cambia 'res' por 'req'
   try {
     const response = await axios.get("https://swapi.py4e.com/api/films/");
     const filmsFromAPI = response.data.results.map(
@@ -28,6 +29,7 @@ const getFilmsData = async (req, res) => {
     );
 
     const filmsFromDB = await films.findAll();
+    console.log("prueba03");
 
     const combinedFilms = [
       ...filmsFromAPI,
@@ -48,10 +50,15 @@ const getFilmsData = async (req, res) => {
         editado: film.editado,
       })),
     ];
-
-    res.json(combinedFilms);
+    return {
+      statusCode: 200,
+      body: JSON.stringify(combinedFilms),
+    };
   } catch (error) {
-    res.status(500).send("Error al obtener los datos");
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: "Error al obtener los datos" }),
+    };
   }
 };
 
@@ -79,7 +86,10 @@ const getFilmsData = async (req, res) => {
  *       500:
  *         description: Error al agregar una nueva película
  */
-const addFilmData = async (req, res) => {
+const addFilmData = async (event) => {
+  const req = JSON.parse(event.body); 
+  let res;
+
   try {
     const {
       titulo,
@@ -96,12 +106,15 @@ const addFilmData = async (req, res) => {
       url,
       creado,
       editado,
-    } = req.body;
+    } = req;
 
     if (!titulo || !episodio_id || !director || !productor || !fecha_lanzamiento) {
-      return res.status(400).json({
-        message: "Faltan campos requeridos",
-      });
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          message: "Faltan campos requeridos",
+        }),
+      };
     }
 
     const newFilm = await films.create({
@@ -121,17 +134,24 @@ const addFilmData = async (req, res) => {
       editado,
     });
 
-    return res.status(201).json({
-      message: "Se agregó una nueva película",
-      data: newFilm,
-    });
+    return {
+      statusCode: 201,
+      body: JSON.stringify({
+        message: "Se agregó una nueva película",
+        data: newFilm,
+      }),
+    };
   } catch (error) {
-    return res.status(500).json({
-      message: "Error al agregar una nueva película",
-      error: error.message,
-    });
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        message: "Error al agregar una nueva película",
+        error: error.message,
+      }),
+    };
   }
 };
+
 
 module.exports = {
   getFilmsData,

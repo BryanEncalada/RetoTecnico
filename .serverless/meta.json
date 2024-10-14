@@ -1,0 +1,1111 @@
+{
+  "C:\\Users\\Benca\\OneDrive\\Documentos\\GitHub\\RetoTecnico": {
+    "versionSfCore": null,
+    "versionFramework": "4.4.5",
+    "isWithinCompose": false,
+    "isCompose": false,
+    "composeOrgName": null,
+    "composeResolverProviders": {
+      "default-aws-credential-resolver": "<REDACTED>",
+      "env": {
+        "instance": {
+          "credentials": "<REDACTED>",
+          "serviceConfigFile": {
+            "service": "default",
+            "provider": {
+              "name": "aws",
+              "runtime": "nodejs18.x",
+              "region": "us-east-1",
+              "environment": {
+                "DB_HOST": "localhost",
+                "DB_USER": "root",
+                "DB_PASSWORD": "<REDACTED>",
+                "DB_NAME": "SWAPI"
+              },
+              "stage": "dev",
+              "versionFunctions": true,
+              "compiledCloudFormationTemplate": {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Description": "The AWS CloudFormation template for this Serverless application",
+                "Resources": {
+                  "GetFilmsLogGroup": {
+                    "Type": "AWS::Logs::LogGroup",
+                    "Properties": {
+                      "LogGroupName": "/aws/lambda/default-dev-getFilms"
+                    }
+                  },
+                  "AddFilmLogGroup": {
+                    "Type": "AWS::Logs::LogGroup",
+                    "Properties": {
+                      "LogGroupName": "/aws/lambda/default-dev-addFilm"
+                    }
+                  },
+                  "IamRoleLambdaExecution": {
+                    "Type": "AWS::IAM::Role",
+                    "Properties": {
+                      "AssumeRolePolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                          {
+                            "Effect": "Allow",
+                            "Principal": {
+                              "Service": [
+                                "lambda.amazonaws.com"
+                              ]
+                            },
+                            "Action": [
+                              "sts:AssumeRole"
+                            ]
+                          }
+                        ]
+                      },
+                      "Policies": [
+                        {
+                          "PolicyName": {
+                            "Fn::Join": [
+                              "-",
+                              [
+                                "default",
+                                "dev",
+                                "lambda"
+                              ]
+                            ]
+                          },
+                          "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                              {
+                                "Effect": "Allow",
+                                "Action": [
+                                  "logs:CreateLogStream",
+                                  "logs:CreateLogGroup",
+                                  "logs:TagResource"
+                                ],
+                                "Resource": [
+                                  {
+                                    "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/default-dev*:*"
+                                  }
+                                ]
+                              },
+                              {
+                                "Effect": "Allow",
+                                "Action": [
+                                  "logs:PutLogEvents"
+                                ],
+                                "Resource": [
+                                  {
+                                    "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/default-dev*:*:*"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "Path": "/",
+                      "RoleName": {
+                        "Fn::Join": [
+                          "-",
+                          [
+                            "default",
+                            "dev",
+                            {
+                              "Ref": "AWS::Region"
+                            },
+                            "lambdaRole"
+                          ]
+                        ]
+                      }
+                    }
+                  },
+                  "GetFilmsLambdaFunction": {
+                    "Type": "AWS::Lambda::Function",
+                    "Properties": {
+                      "Code": {
+                        "S3Bucket": "serverless-framework-deployments-us-east-1-ef970f93-2370",
+                        "S3Key": "serverless/default/dev/1728879231156-2024-10-14T04:13:51.156Z/default.zip"
+                      },
+                      "Handler": "src/app.getFilmsData",
+                      "Runtime": "nodejs18.x",
+                      "FunctionName": "default-dev-getFilms",
+                      "MemorySize": 1024,
+                      "Timeout": 6,
+                      "Environment": {
+                        "Variables": {
+                          "DB_HOST": "localhost",
+                          "DB_USER": "root",
+                          "DB_PASSWORD": "<REDACTED>",
+                          "DB_NAME": "SWAPI"
+                        }
+                      },
+                      "Role": {
+                        "Fn::GetAtt": [
+                          "IamRoleLambdaExecution",
+                          "Arn"
+                        ]
+                      }
+                    },
+                    "DependsOn": [
+                      "GetFilmsLogGroup"
+                    ]
+                  },
+                  "AddFilmLambdaFunction": {
+                    "Type": "AWS::Lambda::Function",
+                    "Properties": {
+                      "Code": {
+                        "S3Bucket": "serverless-framework-deployments-us-east-1-ef970f93-2370",
+                        "S3Key": "serverless/default/dev/1728879231156-2024-10-14T04:13:51.156Z/default.zip"
+                      },
+                      "Handler": "src/app.addFilmData",
+                      "Runtime": "nodejs18.x",
+                      "FunctionName": "default-dev-addFilm",
+                      "MemorySize": 1024,
+                      "Timeout": 6,
+                      "Environment": {
+                        "Variables": {
+                          "DB_HOST": "localhost",
+                          "DB_USER": "root",
+                          "DB_PASSWORD": "<REDACTED>",
+                          "DB_NAME": "SWAPI"
+                        }
+                      },
+                      "Role": {
+                        "Fn::GetAtt": [
+                          "IamRoleLambdaExecution",
+                          "Arn"
+                        ]
+                      }
+                    },
+                    "DependsOn": [
+                      "AddFilmLogGroup"
+                    ]
+                  },
+                  "GetFilmsLambdaVersionCJrZ3zkVPpcGKIEnN3JcbvOWo0ACfMbLp2QioTTC14w": {
+                    "Type": "AWS::Lambda::Version",
+                    "DeletionPolicy": "Retain",
+                    "Properties": {
+                      "FunctionName": {
+                        "Ref": "GetFilmsLambdaFunction"
+                      },
+                      "CodeSha256": "Uu/gQKyraV8za9x0V0hK3R0yZLfUr8AB3ztoYZq5XOc="
+                    }
+                  },
+                  "AddFilmLambdaVersionnRfaFuJccUg1MZq9HOWIJJWpYUVifAFH2YHJ8p42bE": {
+                    "Type": "AWS::Lambda::Version",
+                    "DeletionPolicy": "Retain",
+                    "Properties": {
+                      "FunctionName": {
+                        "Ref": "AddFilmLambdaFunction"
+                      },
+                      "CodeSha256": "Uu/gQKyraV8za9x0V0hK3R0yZLfUr8AB3ztoYZq5XOc="
+                    }
+                  },
+                  "ApiGatewayRestApi": {
+                    "Type": "AWS::ApiGateway::RestApi",
+                    "Properties": {
+                      "Name": "dev-default",
+                      "EndpointConfiguration": {
+                        "Types": [
+                          "EDGE"
+                        ]
+                      },
+                      "Policy": ""
+                    }
+                  },
+                  "ApiGatewayResourceFilms": {
+                    "Type": "AWS::ApiGateway::Resource",
+                    "Properties": {
+                      "ParentId": {
+                        "Fn::GetAtt": [
+                          "ApiGatewayRestApi",
+                          "RootResourceId"
+                        ]
+                      },
+                      "PathPart": "films",
+                      "RestApiId": {
+                        "Ref": "ApiGatewayRestApi"
+                      }
+                    }
+                  },
+                  "ApiGatewayMethodFilmsGet": {
+                    "Type": "AWS::ApiGateway::Method",
+                    "Properties": {
+                      "HttpMethod": "GET",
+                      "RequestParameters": {},
+                      "ResourceId": {
+                        "Ref": "ApiGatewayResourceFilms"
+                      },
+                      "RestApiId": {
+                        "Ref": "ApiGatewayRestApi"
+                      },
+                      "ApiKeyRequired": "<REDACTED>",
+                      "AuthorizationType": "NONE",
+                      "Integration": {
+                        "IntegrationHttpMethod": "POST",
+                        "Type": "AWS_PROXY",
+                        "Uri": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "arn:",
+                              {
+                                "Ref": "AWS::Partition"
+                              },
+                              ":apigateway:",
+                              {
+                                "Ref": "AWS::Region"
+                              },
+                              ":lambda:path/2015-03-31/functions/",
+                              {
+                                "Fn::GetAtt": [
+                                  "GetFilmsLambdaFunction",
+                                  "Arn"
+                                ]
+                              },
+                              "/invocations"
+                            ]
+                          ]
+                        }
+                      },
+                      "MethodResponses": []
+                    },
+                    "DependsOn": [
+                      "GetFilmsLambdaPermissionApiGateway"
+                    ]
+                  },
+                  "ApiGatewayMethodFilmsPost": {
+                    "Type": "AWS::ApiGateway::Method",
+                    "Properties": {
+                      "HttpMethod": "POST",
+                      "RequestParameters": {},
+                      "ResourceId": {
+                        "Ref": "ApiGatewayResourceFilms"
+                      },
+                      "RestApiId": {
+                        "Ref": "ApiGatewayRestApi"
+                      },
+                      "ApiKeyRequired": "<REDACTED>",
+                      "AuthorizationType": "NONE",
+                      "Integration": {
+                        "IntegrationHttpMethod": "POST",
+                        "Type": "AWS_PROXY",
+                        "Uri": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "arn:",
+                              {
+                                "Ref": "AWS::Partition"
+                              },
+                              ":apigateway:",
+                              {
+                                "Ref": "AWS::Region"
+                              },
+                              ":lambda:path/2015-03-31/functions/",
+                              {
+                                "Fn::GetAtt": [
+                                  "AddFilmLambdaFunction",
+                                  "Arn"
+                                ]
+                              },
+                              "/invocations"
+                            ]
+                          ]
+                        }
+                      },
+                      "MethodResponses": []
+                    },
+                    "DependsOn": [
+                      "AddFilmLambdaPermissionApiGateway"
+                    ]
+                  },
+                  "ApiGatewayDeployment1728879228244": {
+                    "Type": "AWS::ApiGateway::Deployment",
+                    "Properties": {
+                      "RestApiId": {
+                        "Ref": "ApiGatewayRestApi"
+                      },
+                      "StageName": "dev"
+                    },
+                    "DependsOn": [
+                      "ApiGatewayMethodFilmsGet",
+                      "ApiGatewayMethodFilmsPost"
+                    ]
+                  },
+                  "GetFilmsLambdaPermissionApiGateway": {
+                    "Type": "AWS::Lambda::Permission",
+                    "Properties": {
+                      "FunctionName": {
+                        "Fn::GetAtt": [
+                          "GetFilmsLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "Action": "lambda:InvokeFunction",
+                      "Principal": "apigateway.amazonaws.com",
+                      "SourceArn": {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":execute-api:",
+                            {
+                              "Ref": "AWS::Region"
+                            },
+                            ":",
+                            {
+                              "Ref": "AWS::AccountId"
+                            },
+                            ":",
+                            {
+                              "Ref": "ApiGatewayRestApi"
+                            },
+                            "/*/*"
+                          ]
+                        ]
+                      }
+                    }
+                  },
+                  "AddFilmLambdaPermissionApiGateway": {
+                    "Type": "AWS::Lambda::Permission",
+                    "Properties": {
+                      "FunctionName": {
+                        "Fn::GetAtt": [
+                          "AddFilmLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "Action": "lambda:InvokeFunction",
+                      "Principal": "apigateway.amazonaws.com",
+                      "SourceArn": {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":execute-api:",
+                            {
+                              "Ref": "AWS::Region"
+                            },
+                            ":",
+                            {
+                              "Ref": "AWS::AccountId"
+                            },
+                            ":",
+                            {
+                              "Ref": "ApiGatewayRestApi"
+                            },
+                            "/*/*"
+                          ]
+                        ]
+                      }
+                    }
+                  }
+                },
+                "Outputs": {
+                  "ServerlessDeploymentBucketName": {
+                    "Value": "serverless-framework-deployments-us-east-1-ef970f93-2370",
+                    "Export": {
+                      "Name": "sls-default-dev-ServerlessDeploymentBucketName"
+                    }
+                  },
+                  "GetFilmsLambdaFunctionQualifiedArn": {
+                    "Description": "Current Lambda function version",
+                    "Value": {
+                      "Ref": "GetFilmsLambdaVersionCJrZ3zkVPpcGKIEnN3JcbvOWo0ACfMbLp2QioTTC14w"
+                    },
+                    "Export": {
+                      "Name": "sls-default-dev-GetFilmsLambdaFunctionQualifiedArn"
+                    }
+                  },
+                  "AddFilmLambdaFunctionQualifiedArn": {
+                    "Description": "Current Lambda function version",
+                    "Value": {
+                      "Ref": "AddFilmLambdaVersionnRfaFuJccUg1MZq9HOWIJJWpYUVifAFH2YHJ8p42bE"
+                    },
+                    "Export": {
+                      "Name": "sls-default-dev-AddFilmLambdaFunctionQualifiedArn"
+                    }
+                  },
+                  "ServiceEndpoint": {
+                    "Description": "URL of the service endpoint",
+                    "Value": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "https://",
+                          {
+                            "Ref": "ApiGatewayRestApi"
+                          },
+                          ".execute-api.",
+                          {
+                            "Ref": "AWS::Region"
+                          },
+                          ".",
+                          {
+                            "Ref": "AWS::URLSuffix"
+                          },
+                          "/dev"
+                        ]
+                      ]
+                    },
+                    "Export": {
+                      "Name": "sls-default-dev-ServiceEndpoint"
+                    }
+                  }
+                }
+              },
+              "vpc": {}
+            },
+            "functions": {
+              "getFilms": {
+                "handler": "src/app.getFilmsData",
+                "events": [
+                  {
+                    "http": {
+                      "path": "films",
+                      "method": "get",
+                      "integration": "AWS_PROXY"
+                    }
+                  }
+                ],
+                "name": "default-dev-getFilms",
+                "package": {},
+                "memory": 1024,
+                "timeout": 6,
+                "runtime": "nodejs18.x",
+                "vpc": {},
+                "versionLogicalId": "GetFilmsLambdaVersionCJrZ3zkVPpcGKIEnN3JcbvOWo0ACfMbLp2QioTTC14w"
+              },
+              "addFilm": {
+                "handler": "src/app.addFilmData",
+                "events": [
+                  {
+                    "http": {
+                      "path": "films",
+                      "method": "post",
+                      "integration": "AWS_PROXY"
+                    }
+                  }
+                ],
+                "name": "default-dev-addFilm",
+                "package": {},
+                "memory": 1024,
+                "timeout": 6,
+                "runtime": "nodejs18.x",
+                "vpc": {},
+                "versionLogicalId": "AddFilmLambdaVersionnRfaFuJccUg1MZq9HOWIJJWpYUVifAFH2YHJ8p42bE"
+              }
+            },
+            "plugins": [
+              "serverless-offline"
+            ],
+            "package": {
+              "exclude": [
+                "node_modules/**",
+                ".git/**",
+                ".serverless/**"
+              ],
+              "artifactsS3KeyDirname": "serverless/default/dev/code-artifacts",
+              "deploymentBucket": "serverless-framework-deployments-us-east-1-ef970f93-2370",
+              "artifact": "C:\\Users\\Benca\\OneDrive\\Documentos\\GitHub\\RetoTecnico\\.serverless\\default.zip",
+              "artifactDirectoryName": "serverless/default/dev/1728879231156-2024-10-14T04:13:51.156Z"
+            }
+          },
+          "configFileDirPath": "C:\\Users\\Benca\\OneDrive\\Documentos\\GitHub\\RetoTecnico",
+          "config": {
+            "type": "env"
+          },
+          "options": {},
+          "stage": "dev",
+          "dashboard": null,
+          "logger": {
+            "namespace": "s:core:resolver:env",
+            "prefix": null,
+            "prefixColor": null
+          },
+          "_credentialsPromise": "<REDACTED>"
+        },
+        "resolvers": {}
+      }
+    },
+    "composeServiceName": null,
+    "servicePath": "C:\\Users\\Benca\\OneDrive\\Documentos\\GitHub\\RetoTecnico",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "service": "default",
+      "provider": {
+        "name": "aws",
+        "runtime": "nodejs18.x",
+        "region": "us-east-1",
+        "environment": {
+          "DB_HOST": "localhost",
+          "DB_USER": "root",
+          "DB_PASSWORD": "<REDACTED>",
+          "DB_NAME": "SWAPI"
+        },
+        "stage": "dev",
+        "versionFunctions": true,
+        "compiledCloudFormationTemplate": {
+          "AWSTemplateFormatVersion": "2010-09-09",
+          "Description": "The AWS CloudFormation template for this Serverless application",
+          "Resources": {
+            "GetFilmsLogGroup": {
+              "Type": "AWS::Logs::LogGroup",
+              "Properties": {
+                "LogGroupName": "/aws/lambda/default-dev-getFilms"
+              }
+            },
+            "AddFilmLogGroup": {
+              "Type": "AWS::Logs::LogGroup",
+              "Properties": {
+                "LogGroupName": "/aws/lambda/default-dev-addFilm"
+              }
+            },
+            "IamRoleLambdaExecution": {
+              "Type": "AWS::IAM::Role",
+              "Properties": {
+                "AssumeRolePolicyDocument": {
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                      "Effect": "Allow",
+                      "Principal": {
+                        "Service": [
+                          "lambda.amazonaws.com"
+                        ]
+                      },
+                      "Action": [
+                        "sts:AssumeRole"
+                      ]
+                    }
+                  ]
+                },
+                "Policies": [
+                  {
+                    "PolicyName": {
+                      "Fn::Join": [
+                        "-",
+                        [
+                          "default",
+                          "dev",
+                          "lambda"
+                        ]
+                      ]
+                    },
+                    "PolicyDocument": {
+                      "Version": "2012-10-17",
+                      "Statement": [
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "logs:CreateLogStream",
+                            "logs:CreateLogGroup",
+                            "logs:TagResource"
+                          ],
+                          "Resource": [
+                            {
+                              "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/default-dev*:*"
+                            }
+                          ]
+                        },
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "logs:PutLogEvents"
+                          ],
+                          "Resource": [
+                            {
+                              "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/default-dev*:*:*"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "Path": "/",
+                "RoleName": {
+                  "Fn::Join": [
+                    "-",
+                    [
+                      "default",
+                      "dev",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      "lambdaRole"
+                    ]
+                  ]
+                }
+              }
+            },
+            "GetFilmsLambdaFunction": {
+              "Type": "AWS::Lambda::Function",
+              "Properties": {
+                "Code": {
+                  "S3Bucket": "serverless-framework-deployments-us-east-1-ef970f93-2370",
+                  "S3Key": "serverless/default/dev/1728879231156-2024-10-14T04:13:51.156Z/default.zip"
+                },
+                "Handler": "src/app.getFilmsData",
+                "Runtime": "nodejs18.x",
+                "FunctionName": "default-dev-getFilms",
+                "MemorySize": 1024,
+                "Timeout": 6,
+                "Environment": {
+                  "Variables": {
+                    "DB_HOST": "localhost",
+                    "DB_USER": "root",
+                    "DB_PASSWORD": "<REDACTED>",
+                    "DB_NAME": "SWAPI"
+                  }
+                },
+                "Role": {
+                  "Fn::GetAtt": [
+                    "IamRoleLambdaExecution",
+                    "Arn"
+                  ]
+                }
+              },
+              "DependsOn": [
+                "GetFilmsLogGroup"
+              ]
+            },
+            "AddFilmLambdaFunction": {
+              "Type": "AWS::Lambda::Function",
+              "Properties": {
+                "Code": {
+                  "S3Bucket": "serverless-framework-deployments-us-east-1-ef970f93-2370",
+                  "S3Key": "serverless/default/dev/1728879231156-2024-10-14T04:13:51.156Z/default.zip"
+                },
+                "Handler": "src/app.addFilmData",
+                "Runtime": "nodejs18.x",
+                "FunctionName": "default-dev-addFilm",
+                "MemorySize": 1024,
+                "Timeout": 6,
+                "Environment": {
+                  "Variables": {
+                    "DB_HOST": "localhost",
+                    "DB_USER": "root",
+                    "DB_PASSWORD": "<REDACTED>",
+                    "DB_NAME": "SWAPI"
+                  }
+                },
+                "Role": {
+                  "Fn::GetAtt": [
+                    "IamRoleLambdaExecution",
+                    "Arn"
+                  ]
+                }
+              },
+              "DependsOn": [
+                "AddFilmLogGroup"
+              ]
+            },
+            "GetFilmsLambdaVersionCJrZ3zkVPpcGKIEnN3JcbvOWo0ACfMbLp2QioTTC14w": {
+              "Type": "AWS::Lambda::Version",
+              "DeletionPolicy": "Retain",
+              "Properties": {
+                "FunctionName": {
+                  "Ref": "GetFilmsLambdaFunction"
+                },
+                "CodeSha256": "Uu/gQKyraV8za9x0V0hK3R0yZLfUr8AB3ztoYZq5XOc="
+              }
+            },
+            "AddFilmLambdaVersionnRfaFuJccUg1MZq9HOWIJJWpYUVifAFH2YHJ8p42bE": {
+              "Type": "AWS::Lambda::Version",
+              "DeletionPolicy": "Retain",
+              "Properties": {
+                "FunctionName": {
+                  "Ref": "AddFilmLambdaFunction"
+                },
+                "CodeSha256": "Uu/gQKyraV8za9x0V0hK3R0yZLfUr8AB3ztoYZq5XOc="
+              }
+            },
+            "ApiGatewayRestApi": {
+              "Type": "AWS::ApiGateway::RestApi",
+              "Properties": {
+                "Name": "dev-default",
+                "EndpointConfiguration": {
+                  "Types": [
+                    "EDGE"
+                  ]
+                },
+                "Policy": ""
+              }
+            },
+            "ApiGatewayResourceFilms": {
+              "Type": "AWS::ApiGateway::Resource",
+              "Properties": {
+                "ParentId": {
+                  "Fn::GetAtt": [
+                    "ApiGatewayRestApi",
+                    "RootResourceId"
+                  ]
+                },
+                "PathPart": "films",
+                "RestApiId": {
+                  "Ref": "ApiGatewayRestApi"
+                }
+              }
+            },
+            "ApiGatewayMethodFilmsGet": {
+              "Type": "AWS::ApiGateway::Method",
+              "Properties": {
+                "HttpMethod": "GET",
+                "RequestParameters": {},
+                "ResourceId": {
+                  "Ref": "ApiGatewayResourceFilms"
+                },
+                "RestApiId": {
+                  "Ref": "ApiGatewayRestApi"
+                },
+                "ApiKeyRequired": "<REDACTED>",
+                "AuthorizationType": "NONE",
+                "Integration": {
+                  "IntegrationHttpMethod": "POST",
+                  "Type": "AWS_PROXY",
+                  "Uri": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":apigateway:",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ":lambda:path/2015-03-31/functions/",
+                        {
+                          "Fn::GetAtt": [
+                            "GetFilmsLambdaFunction",
+                            "Arn"
+                          ]
+                        },
+                        "/invocations"
+                      ]
+                    ]
+                  }
+                },
+                "MethodResponses": []
+              },
+              "DependsOn": [
+                "GetFilmsLambdaPermissionApiGateway"
+              ]
+            },
+            "ApiGatewayMethodFilmsPost": {
+              "Type": "AWS::ApiGateway::Method",
+              "Properties": {
+                "HttpMethod": "POST",
+                "RequestParameters": {},
+                "ResourceId": {
+                  "Ref": "ApiGatewayResourceFilms"
+                },
+                "RestApiId": {
+                  "Ref": "ApiGatewayRestApi"
+                },
+                "ApiKeyRequired": "<REDACTED>",
+                "AuthorizationType": "NONE",
+                "Integration": {
+                  "IntegrationHttpMethod": "POST",
+                  "Type": "AWS_PROXY",
+                  "Uri": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":apigateway:",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ":lambda:path/2015-03-31/functions/",
+                        {
+                          "Fn::GetAtt": [
+                            "AddFilmLambdaFunction",
+                            "Arn"
+                          ]
+                        },
+                        "/invocations"
+                      ]
+                    ]
+                  }
+                },
+                "MethodResponses": []
+              },
+              "DependsOn": [
+                "AddFilmLambdaPermissionApiGateway"
+              ]
+            },
+            "ApiGatewayDeployment1728879228244": {
+              "Type": "AWS::ApiGateway::Deployment",
+              "Properties": {
+                "RestApiId": {
+                  "Ref": "ApiGatewayRestApi"
+                },
+                "StageName": "dev"
+              },
+              "DependsOn": [
+                "ApiGatewayMethodFilmsGet",
+                "ApiGatewayMethodFilmsPost"
+              ]
+            },
+            "GetFilmsLambdaPermissionApiGateway": {
+              "Type": "AWS::Lambda::Permission",
+              "Properties": {
+                "FunctionName": {
+                  "Fn::GetAtt": [
+                    "GetFilmsLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":execute-api:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":",
+                      {
+                        "Ref": "ApiGatewayRestApi"
+                      },
+                      "/*/*"
+                    ]
+                  ]
+                }
+              }
+            },
+            "AddFilmLambdaPermissionApiGateway": {
+              "Type": "AWS::Lambda::Permission",
+              "Properties": {
+                "FunctionName": {
+                  "Fn::GetAtt": [
+                    "AddFilmLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":execute-api:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":",
+                      {
+                        "Ref": "ApiGatewayRestApi"
+                      },
+                      "/*/*"
+                    ]
+                  ]
+                }
+              }
+            }
+          },
+          "Outputs": {
+            "ServerlessDeploymentBucketName": {
+              "Value": "serverless-framework-deployments-us-east-1-ef970f93-2370",
+              "Export": {
+                "Name": "sls-default-dev-ServerlessDeploymentBucketName"
+              }
+            },
+            "GetFilmsLambdaFunctionQualifiedArn": {
+              "Description": "Current Lambda function version",
+              "Value": {
+                "Ref": "GetFilmsLambdaVersionCJrZ3zkVPpcGKIEnN3JcbvOWo0ACfMbLp2QioTTC14w"
+              },
+              "Export": {
+                "Name": "sls-default-dev-GetFilmsLambdaFunctionQualifiedArn"
+              }
+            },
+            "AddFilmLambdaFunctionQualifiedArn": {
+              "Description": "Current Lambda function version",
+              "Value": {
+                "Ref": "AddFilmLambdaVersionnRfaFuJccUg1MZq9HOWIJJWpYUVifAFH2YHJ8p42bE"
+              },
+              "Export": {
+                "Name": "sls-default-dev-AddFilmLambdaFunctionQualifiedArn"
+              }
+            },
+            "ServiceEndpoint": {
+              "Description": "URL of the service endpoint",
+              "Value": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "https://",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    ".execute-api.",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ".",
+                    {
+                      "Ref": "AWS::URLSuffix"
+                    },
+                    "/dev"
+                  ]
+                ]
+              },
+              "Export": {
+                "Name": "sls-default-dev-ServiceEndpoint"
+              }
+            }
+          }
+        },
+        "vpc": {}
+      },
+      "functions": {
+        "getFilms": {
+          "handler": "src/app.getFilmsData",
+          "events": [
+            {
+              "http": {
+                "path": "films",
+                "method": "get",
+                "integration": "AWS_PROXY"
+              }
+            }
+          ],
+          "name": "default-dev-getFilms",
+          "package": {},
+          "memory": 1024,
+          "timeout": 6,
+          "runtime": "nodejs18.x",
+          "vpc": {},
+          "versionLogicalId": "GetFilmsLambdaVersionCJrZ3zkVPpcGKIEnN3JcbvOWo0ACfMbLp2QioTTC14w"
+        },
+        "addFilm": {
+          "handler": "src/app.addFilmData",
+          "events": [
+            {
+              "http": {
+                "path": "films",
+                "method": "post",
+                "integration": "AWS_PROXY"
+              }
+            }
+          ],
+          "name": "default-dev-addFilm",
+          "package": {},
+          "memory": 1024,
+          "timeout": 6,
+          "runtime": "nodejs18.x",
+          "vpc": {},
+          "versionLogicalId": "AddFilmLambdaVersionnRfaFuJccUg1MZq9HOWIJJWpYUVifAFH2YHJ8p42bE"
+        }
+      },
+      "plugins": [
+        "serverless-offline"
+      ],
+      "package": {
+        "exclude": [
+          "node_modules/**",
+          ".git/**",
+          ".serverless/**"
+        ],
+        "artifactsS3KeyDirname": "serverless/default/dev/code-artifacts",
+        "deploymentBucket": "serverless-framework-deployments-us-east-1-ef970f93-2370",
+        "artifact": "C:\\Users\\Benca\\OneDrive\\Documentos\\GitHub\\RetoTecnico\\.serverless\\default.zip",
+        "artifactDirectoryName": "serverless/default/dev/1728879231156-2024-10-14T04:13:51.156Z"
+      }
+    },
+    "serviceRawFile": "service: default\r\n\r\nprovider:\r\n  name: aws\r\n  runtime: nodejs18.x\r\n  region: us-east-1 \r\n  environment:\r\n    DB_HOST: ${env:DB_HOST}\r\n    DB_USER: ${env:DB_USER}\r\n    DB_PASSWORD: ${env:DB_PASSWORD}\r\n    DB_NAME: ${env:DB_NAME}\r\n\r\nfunctions:\r\n\r\n  getFilms:\r\n    handler: src/app.getFilmsData  # Asegúrate de que apunte a la función correcta\r\n    events:\r\n      - http:\r\n          path: films  # Asegúrate de que la ruta esté correcta\r\n          method: get\r\n\r\n  addFilm:\r\n    handler: src/app.addFilmData\r\n    events:\r\n      - http:\r\n          path: films  # Asegúrate de que no haya conflictos de rutas\r\n          method: post\r\n\r\n\r\nplugins:\r\n  - serverless-offline # Si quieres probar localmente\r\n\r\npackage:\r\n  exclude:\r\n    - node_modules/**\r\n    - .git/**\r\n    - .serverless/**\r\n\r\n",
+    "command": [
+      "deploy"
+    ],
+    "options": {},
+    "error": null,
+    "params": {},
+    "machineId": "8e6b8a0c2ba6873be064c4b4a52f0918",
+    "stage": "dev",
+    "accessKeyV2": "<REDACTED>",
+    "accessKeyV1": "<REDACTED>",
+    "orgId": "a38c08bf-6056-4f30-944b-3c23d9f5d597",
+    "orgName": "bryanencalada",
+    "userId": "CLq8WMG3hFMzrLP15Z",
+    "dashboard": {
+      "isEnabledForService": false,
+      "requiredAuthentication": false,
+      "orgFeaturesInUse": null,
+      "orgObservabilityIntegrations": null,
+      "serviceAppId": null,
+      "serviceProvider": null,
+      "instanceParameters": null
+    },
+    "userName": "bryanencalada",
+    "subscription": null,
+    "userEmail": "bryanencalada@gmail.com",
+    "serviceProviderAwsRegion": "us-east-1",
+    "serviceProviderAwsCredentials": "<REDACTED>",
+    "serviceProviderAwsAccountId": "761018864240",
+    "projectType": "traditional",
+    "versionSf": "4.4.5",
+    "serviceProviderAwsCfStackName": "default-dev",
+    "integrations": {},
+    "serviceUniqueId": "arn:aws:cloudformation:us-east-1:761018864240:stack/default-dev/130708a0-89c7-11ef-b02c-0e7cb26ba367",
+    "serviceProviderAwsCfStackId": "arn:aws:cloudformation:us-east-1:761018864240:stack/default-dev/130708a0-89c7-11ef-b02c-0e7cb26ba367",
+    "serviceProviderAwsCfStackCreated": "2024-10-14T00:55:58.363Z",
+    "serviceProviderAwsCfStackUpdated": "2024-10-14T04:10:09.273Z",
+    "serviceProviderAwsCfStackStatus": "UPDATE_COMPLETE",
+    "serviceProviderAwsCfStackOutputs": [
+      {
+        "OutputKey": "GetFilmsLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:us-east-1:761018864240:function:default-dev-getFilms:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-default-dev-GetFilmsLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "AddFilmLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:us-east-1:761018864240:function:default-dev-addFilm:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-default-dev-AddFilmLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "ServiceEndpoint",
+        "OutputValue": "https://lk6ssvsx9b.execute-api.us-east-1.amazonaws.com/dev",
+        "Description": "URL of the service endpoint",
+        "ExportName": "sls-default-dev-ServiceEndpoint"
+      },
+      {
+        "OutputKey": "ServerlessDeploymentBucketName",
+        "OutputValue": "serverless-framework-deployments-us-east-1-ef970f93-2370",
+        "ExportName": "sls-default-dev-ServerlessDeploymentBucketName"
+      }
+    ]
+  }
+}
