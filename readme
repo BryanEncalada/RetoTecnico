@@ -1,6 +1,6 @@
 
 
-puerto 3002 Documentación de la API de Star Wars
+puerto 3002/api-docs Documentación de la API de Star Wars
 npm test para ejecutar las pruebas
 
 --  Crear base de datos y tabla para almacenar los datos de las películas de Star Wars

@@ -9,10 +9,10 @@
       "runtime": "nodejs18.x",
       "region": "us-east-1",
       "environment": {
-        "DB_HOST": "localhost",
-        "DB_USER": "root",
-        "DB_PASSWORD": "mysql",
-        "DB_NAME": "SWAPI"
+        "DB_HOST": "201.148.107.87",
+        "DB_USER": "pettimep_pettimeBD",
+        "DB_PASSWORD": "Pettime@123",
+        "DB_NAME": "pettimep_pettimeBD"
       },
       "stage": "dev",
       "versionFunctions": true,
@@ -115,7 +115,7 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-us-east-1-ef970f93-2370",
-                "S3Key": "serverless/default/dev/1728879231156-2024-10-14T04:13:51.156Z/default.zip"
+                "S3Key": "serverless/default/dev/1728915566937-2024-10-14T14:19:26.937Z/default.zip"
               },
               "Handler": "src/app.getFilmsData",
               "Runtime": "nodejs18.x",
@@ -124,10 +124,10 @@
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "DB_HOST": "localhost",
-                  "DB_USER": "root",
-                  "DB_PASSWORD": "mysql",
-                  "DB_NAME": "SWAPI"
+                  "DB_HOST": "201.148.107.87",
+                  "DB_USER": "pettimep_pettimeBD",
+                  "DB_PASSWORD": "Pettime@123",
+                  "DB_NAME": "pettimep_pettimeBD"
                 }
               },
               "Role": {
@@ -146,7 +146,7 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-us-east-1-ef970f93-2370",
-                "S3Key": "serverless/default/dev/1728879231156-2024-10-14T04:13:51.156Z/default.zip"
+                "S3Key": "serverless/default/dev/1728915566937-2024-10-14T14:19:26.937Z/default.zip"
               },
               "Handler": "src/app.addFilmData",
               "Runtime": "nodejs18.x",
@@ -155,10 +155,10 @@
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "DB_HOST": "localhost",
-                  "DB_USER": "root",
-                  "DB_PASSWORD": "mysql",
-                  "DB_NAME": "SWAPI"
+                  "DB_HOST": "201.148.107.87",
+                  "DB_USER": "pettimep_pettimeBD",
+                  "DB_PASSWORD": "Pettime@123",
+                  "DB_NAME": "pettimep_pettimeBD"
                 }
               },
               "Role": {
@@ -172,24 +172,24 @@
               "AddFilmLogGroup"
             ]
           },
-          "GetFilmsLambdaVersionCJrZ3zkVPpcGKIEnN3JcbvOWo0ACfMbLp2QioTTC14w": {
+          "GetFilmsLambdaVersionqgyIRhcFx11H1lkFPTlh3zaipsxcLZwlfQsNDWUi1GI": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetFilmsLambdaFunction"
               },
-              "CodeSha256": "Uu/gQKyraV8za9x0V0hK3R0yZLfUr8AB3ztoYZq5XOc="
+              "CodeSha256": "ghygb3w/7d+OYHm8Drak3Y6YZQ+6o7qsH+pAIqd+D74="
             }
           },
-          "AddFilmLambdaVersionnRfaFuJccUg1MZq9HOWIJJWpYUVifAFH2YHJ8p42bE": {
+          "AddFilmLambdaVersioniKKU8bIuIthbFHLYdBliqytrtFANbEn7J2uGavNCfo": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AddFilmLambdaFunction"
               },
-              "CodeSha256": "Uu/gQKyraV8za9x0V0hK3R0yZLfUr8AB3ztoYZq5XOc="
+              "CodeSha256": "ghygb3w/7d+OYHm8Drak3Y6YZQ+6o7qsH+pAIqd+D74="
             }
           },
           "ApiGatewayRestApi": {
@@ -311,7 +311,7 @@
               "AddFilmLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1728879228244": {
+          "ApiGatewayDeployment1728915563573": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -409,7 +409,7 @@
           "GetFilmsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetFilmsLambdaVersionCJrZ3zkVPpcGKIEnN3JcbvOWo0ACfMbLp2QioTTC14w"
+              "Ref": "GetFilmsLambdaVersionqgyIRhcFx11H1lkFPTlh3zaipsxcLZwlfQsNDWUi1GI"
             },
             "Export": {
               "Name": "sls-default-dev-GetFilmsLambdaFunctionQualifiedArn"
@@ -418,7 +418,7 @@
           "AddFilmLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AddFilmLambdaVersionnRfaFuJccUg1MZq9HOWIJJWpYUVifAFH2YHJ8p42bE"
+              "Ref": "AddFilmLambdaVersioniKKU8bIuIthbFHLYdBliqytrtFANbEn7J2uGavNCfo"
             },
             "Export": {
               "Name": "sls-default-dev-AddFilmLambdaFunctionQualifiedArn"
@@ -476,7 +476,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetFilmsLambdaVersionCJrZ3zkVPpcGKIEnN3JcbvOWo0ACfMbLp2QioTTC14w"
+        "versionLogicalId": "GetFilmsLambdaVersionqgyIRhcFx11H1lkFPTlh3zaipsxcLZwlfQsNDWUi1GI"
       },
       "addFilm": {
         "handler": "src/app.addFilmData",
@@ -495,7 +495,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "AddFilmLambdaVersionnRfaFuJccUg1MZq9HOWIJJWpYUVifAFH2YHJ8p42bE"
+        "versionLogicalId": "AddFilmLambdaVersioniKKU8bIuIthbFHLYdBliqytrtFANbEn7J2uGavNCfo"
       }
     },
     "configValidationMode": "warn",
@@ -520,7 +520,7 @@
         "artifactsS3KeyDirname": "serverless/default/dev/code-artifacts",
         "deploymentBucket": "serverless-framework-deployments-us-east-1-ef970f93-2370",
         "artifact": "C:\\Users\\Benca\\OneDrive\\Documentos\\GitHub\\RetoTecnico\\.serverless\\default.zip",
-        "artifactDirectoryName": "serverless/default/dev/1728879231156-2024-10-14T04:13:51.156Z"
+        "artifactDirectoryName": "serverless/default/dev/1728915566937-2024-10-14T14:19:26.937Z"
       }
     },
     "appId": null,
@@ -529,7 +529,7 @@
     "artifact": "C:\\Users\\Benca\\OneDrive\\Documentos\\GitHub\\RetoTecnico\\.serverless\\default.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/default/dev/1728879231156-2024-10-14T04:13:51.156Z",
+    "artifactDirectoryName": "serverless/default/dev/1728915566937-2024-10-14T14:19:26.937Z",
     "artifact": "default.zip"
   }
 }
